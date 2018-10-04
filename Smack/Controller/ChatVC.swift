@@ -17,8 +17,8 @@ class ChatVC: UIViewController {
         super.viewDidLoad()
         menuBtn.addTarget(self.revealViewController(), action: #selector(SWRevealViewController.revealToggle(_:)), for: .touchUpInside)// add custom action from SWRevealViewController
         
-        self.view.addGestureRecognizer((self.revealViewController()?.panGestureRecognizer())!)
-        self.view.addGestureRecognizer((self.revealViewController()?.tapGestureRecognizer())!)
+        self.view.addGestureRecognizer((self.revealViewController()?.panGestureRecognizer())!)// Functionality to slide menu out and in
+        self.view.addGestureRecognizer((self.revealViewController()?.tapGestureRecognizer())!)// Functionality to tap menu back in
         // Do any additional setup after loading the view.
     }
     
