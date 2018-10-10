@@ -43,8 +43,12 @@ class CreateAccountVC: UIViewController {
         }
         // Once email and pass unwrap pass them into register user
         AuthService.instance.registerUser(email: email, password: pass) { (success) in
-            if success{
-                print("Registered User!")
+            if success{ // If register User comes back successfull then login user
+                AuthService.instance.loginUser(email: email, password: pass, completion: { (success) in
+                    if success {
+                        print("Logged in user!",AuthService.instance.authToken)
+                    }
+                })
             }
         }
     }

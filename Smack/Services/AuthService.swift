@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire // helps with web requests, built on URLSession framework
+import SwiftyJSON // helps with JSON handling, gets rid of casting and unwrapping
 
 class AuthService{
     static let instance = AuthService() // Will be singleton
@@ -62,6 +63,56 @@ class AuthService{
                     completion(false)
                     debugPrint(response.result.error as Any)
                 }
+        }
+    }
+    
+    func loginUser(email: String, password: String, completion: @escaping CompletionHandler){
+        let lowerCaseEmail = email.lowercased()
+
+        let body: [String: Any] = [
+            "email": lowerCaseEmail,
+            "password": password
+        ]
+        
+        Alamofire.request(URL_LOGIN, method: .post, parameters: body, encoding: JSONEncoding.default, headers: HEADER).responseJSON {
+            (response) in
+            if response.result.error == nil {
+                //Take response value and read as dictionary, typical way without libary to read JSON
+//                if let json = response.result.value as? Dictionary<String,Any> {
+//                    if let email = json["user"] as? String{
+//                        self.userEmail = email
+//                    }
+//                    if let token = json["token"] as? String {
+//                        self.authToken = token
+//                    }
+//                }
+                
+                //Using SwiftyJSON
+                guard let data = response.data else{
+                    return
+                }
+                //grab JSON object, can fail so pu in do catch block
+                do{
+                    let json = try JSON(data: data)
+                    self.userEmail = json["user"].stringValue
+                    self.authToken = json["token"].stringValue
+                    self.isLoggedIn = true
+                } catch{
+                    debugPrint("Error converting to JSON object")
+                }
+                
+                
+                //Can also use guards and chain to do the same as above
+//                guard let data = response.data,
+//                    let json = try? JSON(data: data) else {return}
+//                self.userEmail = json["user"].stringValue
+//                self.authToken = json["token"].stringValue
+//                self.isLoggedIn = true
+                completion(true)
+            } else{
+                completion(false)
+                debugPrint(response.result.error as Any)
+            }
         }
     }
     
