@@ -116,4 +116,41 @@ class AuthService{
         }
     }
     
+    func createUser(name: String, email: String, avatarName: String, avatarColor: String,completion: @escaping CompletionHandler){
+        let lowerCaseEmail = email.lowercased()
+        
+        let body: [String: Any] = [
+            "name": name,
+            "email": lowerCaseEmail,
+            "avatarName": avatarName,
+            "avatarColor": avatarColor
+        ]
+        
+        let header = [
+            "Authorization":"Bearer \(AuthService.instance.authToken)",
+            "Content-Type": "application/json; charset=utf-8"
+            ]
+        
+        Alamofire.request(URL_ADD_USER , method: .post , parameters: body, encoding: JSONEncoding.default, headers: header).responseJSON {
+            (response) in
+            if response.result.error == nil {
+                guard let data = response.data,
+                let json = try? JSON(data: data)
+                else {return}
+                let id = json["_id"].stringValue
+                let color = json["avatarColor"].stringValue
+                let avatarName = json["avatarName"].stringValue
+                let email = json["email"].stringValue
+                let name = json["name"].stringValue
+                
+                UserDataService.instance.setUserData(id: id, avatarColor: color, avatarName: avatarName, email: email, name: name)
+                completion(true)
+            } else {
+                completion(false)
+                debugPrint(response.result.error as Any)
+            }
+        }
+        
+    }
+    
 }
