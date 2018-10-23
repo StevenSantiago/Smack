@@ -29,4 +29,35 @@ class UserDataService{
     func setAvatarName(avatarName: String){
         self.avatarName = avatarName
     }
+    
+    func returnUIColor(components: String) -> UIColor{
+        //Default color in case cannot unwrap
+        let defaultColor = UIColor.lightGray
+        // set up scanner to parse through component passed in
+        let scanner = Scanner(string: components)
+        let skipped = CharacterSet(charactersIn: "[], ")
+        let comma = CharacterSet(charactersIn: ",")
+        //set characters to be skipped to scanner property
+        scanner.charactersToBeSkipped = skipped
+        
+        var r,g,b,a : NSString?
+        scanner.scanUpToCharacters(from: comma, into: &r)
+        scanner.scanUpToCharacters(from: comma, into: &g)
+        scanner.scanUpToCharacters(from: comma, into: &b)
+        scanner.scanUpToCharacters(from: comma, into: &a)
+        
+        guard let rUnwrap = r else{return defaultColor}
+        guard let gUnwrap = g else{return defaultColor}
+        guard let bUnwrap = b else{return defaultColor}
+        guard let aUnwrap = a else{return defaultColor}
+        
+        let rfloat = CGFloat(rUnwrap.doubleValue)
+        let gfloat = CGFloat(gUnwrap.doubleValue)
+        let bfloat = CGFloat(bUnwrap.doubleValue)
+        let afloat = CGFloat(aUnwrap.doubleValue)
+        
+        let newUIColor = UIColor(red: rfloat, green: gfloat, blue: bfloat, alpha: afloat)
+        
+        return newUIColor
+    }
 }
