@@ -23,7 +23,15 @@ class ChannelVC: UIViewController {
     }
 
     @IBAction func loginBtnPressed(_ sender: Any) {
+        if AuthService.instance.isLoggedIn {
+            //Instantiate view controller
+            let profile = ProfileVC()
+            //Set modal presentation style
+            profile.modalPresentationStyle = .custom
+            present(profile, animated: true, completion: nil)
+        } else{
         performSegue(withIdentifier: TO_LOGIN, sender: nil)
+        }
     }
     
     @IBAction func prepareForUnwind(segue: UIStoryboardSegue){
