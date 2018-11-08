@@ -38,6 +38,7 @@ class ProfileVC: UIViewController {
         
         //Adding gesture recognizer
         let closeTouch = UITapGestureRecognizer(target: self, action: #selector(ProfileVC.closeTap(_:)))
+        
         bgView.addGestureRecognizer(closeTouch)
     }
     

@@ -20,6 +20,13 @@ class ChatVC: UIViewController {
         self.view.addGestureRecognizer((self.revealViewController()?.panGestureRecognizer())!)// Functionality to slide menu out and in
         self.view.addGestureRecognizer((self.revealViewController()?.tapGestureRecognizer())!)// Functionality to tap menu back in
         // Do any additional setup after loading the view.
+        
+        //Checks if user is already logged in
+        if AuthService.instance.isLoggedIn {
+            AuthService.instance.findUserByEmail { (success) in
+                NotificationCenter.default.post(name: NOTIF_USER_DATA_DID_CHANGE, object: nil)
+            }
+        }
     }
     
 
